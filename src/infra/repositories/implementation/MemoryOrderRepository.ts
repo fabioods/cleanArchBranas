@@ -10,8 +10,9 @@ export class MemoryOrderRepository implements IOrderRepository {
     this.orders = [];
   }
 
-  async findByOrderId(orderId: string): Promise<Order> {
-    throw this.orders.find(order => order.id === orderId);
+  async findOrdersByUser(user_id: string): Promise<Order[] | null> {
+    const orders = this.orders.filter(order => order.user_id === user_id);
+    return orders;
   }
 
   async save(order: ICreateOrderDTO): Promise<Order> {
