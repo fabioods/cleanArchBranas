@@ -18,7 +18,8 @@
     "import/extensions": ["error", "ignorePackages", { "ts": "never" }],
     "import/prefer-default-export": "off",
     "class-methods-use-this": "off",
-    "no-useless-constructor": "off"
+    "no-useless-constructor": "off",
+    "camelcase": "off"
   },
   "settings": {
     "import/parsers": {
