@@ -2,7 +2,7 @@ import { CreateUserUseCase } from '../../../data/useCases/CreateUserUseCase';
 import { MemoryUserRepository } from '../../../infra/repositories/implementation/MemoryUserRepository';
 import { CPFValidatorAdapter } from '../../../utils/cpfValidatorAdapter';
 import { IController } from '../../protocols';
-import { CreateUserController } from './createUserController';
+import { CreateUserController } from './CreateUserController';
 
 describe('CreateUserController', () => {
   const makeCreateUserController = (): IController => {

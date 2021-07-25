@@ -2,7 +2,7 @@ import { CreateUserUseCase } from '../../../data/useCases/CreateUserUseCase';
 import { ListAllUsersUseCase } from '../../../data/useCases/ListAllUserUseCase';
 import { MemoryUserRepository } from '../../../infra/repositories/implementation/MemoryUserRepository';
 import { CPFValidatorAdapter } from '../../../utils/cpfValidatorAdapter';
-import { CreateUserController } from '../createUser/createUserController';
+import { CreateUserController } from '../createUser/CreateUserController';
 import { ListAllUserController } from './ListAllUserController';
 
 describe('Listar todos os usuários', () => {
