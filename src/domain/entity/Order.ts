@@ -8,4 +8,5 @@ export type Order = {
   items: OrderItem[];
   discount: number;
   total: number;
+  total_with_discount: number;
 };
