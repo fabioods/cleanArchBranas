@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest --runInBand --verbose",
+    "test": "jest  --passWithNoTests --runInBand --verbose",
     "prepare": "husky install",
     "lint": "eslint src/** --fix"
   },
