@@ -1,6 +1,6 @@
-import { CPFValidator } from '../protocols/CPFValidator';
+import { ICPFValidator } from '../presentation/protocols';
 
-export class CPFValidatorAdapter implements CPFValidator {
+export class CPFValidatorAdapter implements ICPFValidator {
   private readonly FACTOR_DIGIT_1 = 10;
 
   private readonly FACTOR_DIGIT_2 = 11;
