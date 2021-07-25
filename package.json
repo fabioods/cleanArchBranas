@@ -6,7 +6,13 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "tsc && jest dist/"
+    "test": "tsc && jest dist/",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*.ts": [
+      "eslint --ext .ts --fix"
+    ]
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
@@ -19,7 +25,10 @@
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
+    "git-commit-msg-linter": "^3.2.6",
+    "husky": "^7.0.0",
     "jest": "^27.0.6",
+    "lint-staged": "^11.1.1",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4",
     "ts-node-dev": "^1.1.8",
