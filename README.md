@@ -9,6 +9,10 @@
   </a>
 </p>
 
+<p align="center">
+  <img alt="Preview" src="./doc/doc.jpg">
+</p>
+
 > Projeto sobre a aplicação de arquitetura limpa desenvolvido no curso do Rodrigo Branas
 
 ## Install
