@@ -1,4 +1,5 @@
-import { MemoryCreateUser } from '../../../data/useCases/MemoryCreateUser';
+import { CreateUserUseCase } from '../../../data/useCases/CreateUserUseCase';
+import { MemoryUserRepository } from '../../../infra/repositories/implementation/MemoryUserRepository';
 import { CPFValidatorAdapter } from '../../../utils/cpfValidatorAdapter';
 import { IController } from '../../protocols';
 import { CreateUserController } from './createUserController';
@@ -6,10 +7,11 @@ import { CreateUserController } from './createUserController';
 describe('CreateUserController', () => {
   const makeCreateUserController = (): IController => {
     const cpfValidatorAdapter = new CPFValidatorAdapter();
-    const createUserMemory = new MemoryCreateUser();
+    const userRepository = new MemoryUserRepository();
+    const createUserUseCase = new CreateUserUseCase(userRepository);
     const createUserController = new CreateUserController(
       cpfValidatorAdapter,
-      createUserMemory
+      createUserUseCase
     );
     return createUserController;
   };
@@ -44,5 +46,13 @@ describe('CreateUserController', () => {
       body: { name: 'Fábio', cpf: null },
     });
     expect(httpResponse.status).toEqual(400);
+  });
+
+  it('should be able to return an uuid when create a new user', async () => {
+    const createUserController = makeCreateUserController();
+    const newUser = await createUserController.handle({
+      body: { name: 'Fábio', cpf: '529.982.247-25' },
+    });
+    expect(newUser.body.user.id).toBeDefined();
   });
 });
