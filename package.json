@@ -6,8 +6,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "tsc && jest dist/",
-    "prepare": "husky install"
+    "test": "jest --runInBand",
+    "prepare": "husky install",
+    "lint": "eslint src/** --fix"
   },
   "lint-staged": {
     "**/*.ts": [
