@@ -1,10 +1,10 @@
 import { User } from '../entity/User';
 
-export type createUserModel = {
+export type createUserDTO = {
   name: string;
   cpf: string;
 };
 
 export interface ICreateUser {
-  createUser(user: createUserModel): Promise<User>;
+  createUser(user: createUserDTO): Promise<User>;
 }
