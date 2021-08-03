@@ -5,6 +5,7 @@ import { ICreateOrderDTO } from '../../../domain/useCases/ICreateOrder';
 import { MemoryCouponRepository } from '../../../infra/repositories/implementation/MemoryCouponRepository';
 import { MemoryOrderRepository } from '../../../infra/repositories/implementation/MemoryOrderRepository';
 import { MemoryUserRepository } from '../../../infra/repositories/implementation/MemoryUserRepository';
+import { FakeShippApi } from '../../../providers/implementations/FakeShippAPI';
 import { CPFValidatorAdapter } from '../../../utils/cpfValidatorAdapter';
 import { CreateOrderController } from '../createOrder/CreateOrderController';
 import { CreateUserController } from '../createUser/CreateUserController';
@@ -21,12 +22,13 @@ describe('List orders by user', () => {
     );
 
     const couponRepository = new MemoryCouponRepository();
-
+    const shippAPI = new FakeShippApi();
     const orderRepository = new MemoryOrderRepository();
     const createOrderUserCase = new CreateOrderUseCase(
       orderRepository,
       couponRepository,
-      userRepository
+      userRepository,
+      shippAPI
     );
     const createOrderController = new CreateOrderController(
       createOrderUserCase
