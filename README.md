@@ -15,6 +15,12 @@
 
 > Projeto sobre a aplicação de arquitetura limpa desenvolvido no curso do Rodrigo Branas
 
+## Branches
+
+- [master] - É o branch principal do projeto, os arquivos daqui veem do branch mine;
+- [mine] - É o branch onde eu implementei com base nos meus conhecimentos sobre o curso do Rodrigo Branas & Rodrigo Manguinho;
+- [branas] - É o branch onde segui a implementação realizada em aula com o Rodrigo Branas;
+
 ## Install
 
 ```sh
