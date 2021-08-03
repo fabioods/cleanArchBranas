@@ -20,13 +20,7 @@ export class MemoryOrderRepository implements IOrderRepository {
 
     // eslint-disable-next-line no-param-reassign
     order.items = order.items.map(item => {
-      const newItem = new OrderItem(
-        item.description,
-        item.quantity,
-        item.price,
-        order.id,
-        uuid()
-      );
+      const newItem = Object.assign(item, { id: uuid(), order_id: order.id });
       return newItem;
     });
 
