@@ -9,9 +9,13 @@ export class OrderItem {
 
   order_id: string;
 
-  getTotal(): number {
-    return this.quantity * this.price;
-  }
+  height: number;
+
+  width: number;
+
+  thickness: number;
+
+  weight: number;
 
   constructor(
     description: string,
@@ -25,5 +29,17 @@ export class OrderItem {
     this.price = price;
     if (order_id) this.order_id = order_id;
     if (id) this.id = id;
+  }
+
+  getVolume(): number {
+    return this.height * this.width * this.thickness;
+  }
+
+  getDensity(): number {
+    return this.weight / this.getVolume();
+  }
+
+  getTotal(): number {
+    return this.quantity * this.price;
   }
 }
