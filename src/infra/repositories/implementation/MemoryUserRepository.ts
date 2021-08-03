@@ -19,4 +19,9 @@ export class MemoryUserRepository implements IUserRepository {
     this.users.push(newUser);
     return newUser;
   }
+
+  async findById(id: string): Promise<User | undefined> {
+    const user = this.users.find(u => u.id === id);
+    return user;
+  }
 }
