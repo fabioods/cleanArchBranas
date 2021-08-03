@@ -6,12 +6,14 @@ import {
 import { ICouponRepository } from '../../infra/repositories/ICouponRepository';
 import { IOrderRepository } from '../../infra/repositories/IOrderRepository';
 import { IUserRepository } from '../../infra/repositories/IUserRepository';
+import { IShipp } from '../../providers/IShipp';
 
 export class CreateOrderUseCase implements ICreateOrder {
   constructor(
     private orderRepository: IOrderRepository,
     private couponRepository: ICouponRepository,
-    private userRepository: IUserRepository
+    private userRepository: IUserRepository,
+    private shippAPI: IShipp
   ) {}
 
   async createOrder(order: ICreateOrderDTO): Promise<Order> {
@@ -39,14 +41,41 @@ export class CreateOrderUseCase implements ICreateOrder {
     const coupon = await this.couponRepository.findByCoupon(order.coupon);
     if (coupon && !coupon.isValid()) throw new Error('Invalid coupon');
 
+    if (
+      (order.shipping && !order.shipping.destination) ||
+      (order.shipping && !order.shipping?.source)
+    )
+      throw new Error('You must specify shipping destination and source');
+
     const newOrder = new Order(user);
+
     if (coupon) newOrder.addCoupon(coupon);
 
     for (let index = 0; index < order.items.length; index++) {
       const element = order.items[index];
-      newOrder.addItem(element.description, element.quantity, element.price);
+      newOrder.addItem(
+        element.description,
+        element.quantity,
+        element.price,
+        element.height,
+        element.width,
+        element.thickness,
+        element.weight
+      );
     }
 
+    if (order.shipping) {
+      const distance = await this.shippAPI.calculateDistance(
+        order.shipping.source,
+        order.shipping.destination
+      );
+
+      newOrder.addShipp(
+        order.shipping.source,
+        order.shipping.destination,
+        distance
+      );
+    }
     const orderSaved = await this.orderRepository.save(newOrder);
     return orderSaved;
   }
