@@ -21,18 +21,22 @@ export class OrderItem {
     description: string,
     quantity: number,
     price: number,
-    order_id?: string,
-    id?: string
+    height?: number,
+    width?: number,
+    thickness?: number,
+    weight?: number
   ) {
     this.description = description;
     this.quantity = quantity;
     this.price = price;
-    if (order_id) this.order_id = order_id;
-    if (id) this.id = id;
+    if (height) this.height = height;
+    if (width) this.width = width;
+    if (thickness) this.thickness = thickness;
+    if (weight) this.weight = weight;
   }
 
   getVolume(): number {
-    return this.height * this.width * this.thickness;
+    return (this.height * this.width * this.thickness) / 1000000;
   }
 
   getDensity(): number {
