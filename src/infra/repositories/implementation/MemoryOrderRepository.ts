@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { Order } from '../../../domain/entity/Order';
-import { ICreateOrderDTO } from '../../../domain/useCases/ICreateOrder';
+import { OrderItem } from '../../../domain/entity/OrderItem';
 import { IOrderRepository } from '../IOrderRepository';
 
 export class MemoryOrderRepository implements IOrderRepository {
@@ -11,31 +11,26 @@ export class MemoryOrderRepository implements IOrderRepository {
   }
 
   async findOrdersByUser(user_id: string): Promise<Order[] | null> {
-    const orders = this.orders.filter(order => order.user_id === user_id);
+    const orders = this.orders.filter(order => order.user.id === user_id);
     return orders;
   }
 
-  async save(order: ICreateOrderDTO): Promise<Order> {
-    const { user_id, discount, items, total } = order;
-    const total_with_discount = discount
-      ? total - (discount / 100) * total
-      : total;
-    const newOrder = {
-      id: uuid(),
-      discount,
-      total,
-      user_id,
-      total_with_discount,
-    } as Order;
-    const itemsFormatted = items.map(item => {
-      return {
-        ...item,
-        id: uuid(),
-        order_id: newOrder.id,
-      };
-    });
-    this.orders.push(newOrder);
+  async save(order: Order): Promise<Order> {
+    Object.assign(order, { id: uuid() });
 
-    return { ...newOrder, items: itemsFormatted };
+    // eslint-disable-next-line no-param-reassign
+    order.items = order.items.map(item => {
+      const newItem = new OrderItem(
+        item.description,
+        item.quantity,
+        item.price,
+        order.id,
+        uuid()
+      );
+      return newItem;
+    });
+
+    this.orders.push(order);
+    return order;
   }
 }
