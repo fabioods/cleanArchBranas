@@ -5,6 +5,7 @@ import { ICreateOrderDTO } from '../../../domain/useCases/ICreateOrder';
 import { MemoryCouponRepository } from '../../../infra/repositories/implementation/MemoryCouponRepository';
 import { MemoryOrderRepository } from '../../../infra/repositories/implementation/MemoryOrderRepository';
 import { MemoryUserRepository } from '../../../infra/repositories/implementation/MemoryUserRepository';
+import { FakeShippApi } from '../../../providers/implementations/FakeShippAPI';
 import { CPFValidatorAdapter } from '../../../utils/cpfValidatorAdapter';
 import { DateFnsAdapter } from '../../../utils/dateFnsAdapter';
 import { CreateCouponController } from '../createCoupon/CreateCouponController';
@@ -30,11 +31,13 @@ const makeSUT = () => {
     createCouponUseCase
   );
 
+  const shippAPI = new FakeShippApi();
   const orderRepository = new MemoryOrderRepository();
   const createOrderUserCase = new CreateOrderUseCase(
     orderRepository,
     couponRepository,
-    userRepository
+    userRepository,
+    shippAPI
   );
   const createOrderController = new CreateOrderController(createOrderUserCase);
   return {
@@ -287,7 +290,7 @@ describe('Criação de pedidos', () => {
     );
   });
 
-  it('should be able to return an error if height, width, thickness or weight is 0 or lower than 0', async () => {
+  it('should be able to return an error if declare a shipping object but you do not specify values for this', async () => {
     const { createOrderController, createUserController } = makeSUT();
     const createUser = await createUserController.handle({
       body: { name: 'Fábio', cpf: '529.982.247-25' },
@@ -305,9 +308,9 @@ describe('Criação de pedidos', () => {
           description: 'Coca-cola',
           quantity: 1,
           price: 10,
-          height: 0,
-          width: 0,
-          thickness: 0,
+          height: 1,
+          width: 1,
+          thickness: 1,
           weight: 1,
         },
       ],
@@ -320,7 +323,73 @@ describe('Criação de pedidos', () => {
     });
 
     expect(httpResponse.body).toBe(
-      'Some items has invalid dimensions or weight'
+      'You must specify shipping destination and source'
     );
+  });
+
+  it('should be able to return 30 for height 100cm, width 30cm, thickness 10cm and weight 3kg', async () => {
+    const { createOrderController, createUserController } = makeSUT();
+    const createUser = await createUserController.handle({
+      body: { name: 'Fábio', cpf: '529.982.247-25' },
+    });
+
+    const order = {
+      user_id: createUser.body.user.id,
+      coupon: '',
+      shipping: {
+        source: '84030-300',
+        destination: '84030-200',
+      },
+      items: [
+        {
+          description: 'Coca-cola',
+          quantity: 1,
+          price: 10,
+          height: 100,
+          width: 30,
+          thickness: 10,
+          weight: 3,
+        },
+      ],
+    } as ICreateOrderDTO;
+
+    const httpResponse = await createOrderController.handle({
+      body: {
+        order,
+      },
+    });
+
+    expect(httpResponse.body.getShipping()).toBe(30);
+  });
+
+  it('should be able to return 30 for height 100cm, width 30cm, thickness 10cm and weight 3kg', async () => {
+    const { createOrderController, createUserController } = makeSUT();
+    const createUser = await createUserController.handle({
+      body: { name: 'Fábio', cpf: '529.982.247-25' },
+    });
+
+    const order = {
+      user_id: createUser.body.user.id,
+      coupon: '',
+      items: [
+        {
+          description: 'Coca-cola',
+          quantity: 1,
+          price: 10,
+          height: 100,
+          width: 30,
+          thickness: 10,
+          weight: 3,
+        },
+      ],
+    } as ICreateOrderDTO;
+
+    const httpResponse = await createOrderController.handle({
+      body: {
+        order,
+      },
+    });
+
+    expect(httpResponse.body.getShipping()).toBe(10);
   });
 });
