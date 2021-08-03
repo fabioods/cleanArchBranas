@@ -22,6 +22,20 @@ export class CreateOrderUseCase implements ICreateOrder {
     if (order.items.length === 0)
       throw new Error('Order must have at least one item');
 
+    const hasInvalidDimensions = order.items.some(item => {
+      if (
+        item.width <= 0 ||
+        item.height <= 0 ||
+        item.thickness <= 0 ||
+        item.weight <= 0
+      )
+        return true;
+      return false;
+    });
+
+    if (hasInvalidDimensions)
+      throw new Error('Some items has invalid dimensions or weight');
+
     const coupon = await this.couponRepository.findByCoupon(order.coupon);
     if (coupon && !coupon.isValid()) throw new Error('Invalid coupon');
 
