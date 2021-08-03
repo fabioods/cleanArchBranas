@@ -11,43 +11,40 @@ import { CreateCouponController } from '../createCoupon/CreateCouponController';
 import { CreateUserController } from '../createUser/CreateUserController';
 import { CreateOrderController } from './CreateOrderController';
 
-describe('Criação de pedidos', () => {
-  const makeSUT = () => {
-    const userRepository = new MemoryUserRepository();
-    const cpfValidatorAdapter = new CPFValidatorAdapter();
-    const createUserUseCase = new CreateUserUseCase(userRepository);
-    const createUserController = new CreateUserController(
-      cpfValidatorAdapter,
-      createUserUseCase
-    );
+const makeSUT = () => {
+  const userRepository = new MemoryUserRepository();
+  const cpfValidatorAdapter = new CPFValidatorAdapter();
+  const createUserUseCase = new CreateUserUseCase(userRepository);
+  const createUserController = new CreateUserController(
+    cpfValidatorAdapter,
+    createUserUseCase
+  );
 
-    const couponRepository = new MemoryCouponRepository();
-    const dateFnsAdapter = new DateFnsAdapter();
-    const createCouponUseCase = new CreateCouponUseCase(
-      couponRepository,
-      dateFnsAdapter
-    );
-    const createCouponController = new CreateCouponController(
-      createCouponUseCase
-    );
+  const couponRepository = new MemoryCouponRepository();
+  const dateFnsAdapter = new DateFnsAdapter();
+  const createCouponUseCase = new CreateCouponUseCase(
+    couponRepository,
+    dateFnsAdapter
+  );
+  const createCouponController = new CreateCouponController(
+    createCouponUseCase
+  );
 
-    const orderRepository = new MemoryOrderRepository();
-    const createOrderUserCase = new CreateOrderUseCase(
-      orderRepository,
-      couponRepository,
-      userRepository
-    );
-    const createOrderController = new CreateOrderController(
-      createOrderUserCase
-    );
-    return {
-      createOrderController,
-      createUserController,
-      createCouponController,
-      dateFnsAdapter,
-    };
+  const orderRepository = new MemoryOrderRepository();
+  const createOrderUserCase = new CreateOrderUseCase(
+    orderRepository,
+    couponRepository,
+    userRepository
+  );
+  const createOrderController = new CreateOrderController(createOrderUserCase);
+  return {
+    createOrderController,
+    createUserController,
+    createCouponController,
   };
+};
 
+describe('Criação de pedidos', () => {
   it('should be able to return a message if no item was provided', async () => {
     const { createOrderController, createUserController } = makeSUT();
     const createUser = await createUserController.handle({
@@ -112,6 +109,10 @@ describe('Criação de pedidos', () => {
           description: 'Coca-cola',
           quantity: 1,
           price: 10,
+          height: 1,
+          width: 1,
+          thickness: 1,
+          weight: 1,
         },
       ],
     } as ICreateOrderDTO;
@@ -151,6 +152,10 @@ describe('Criação de pedidos', () => {
           description: 'Coca-cola',
           quantity: 1,
           price: 10,
+          height: 1,
+          width: 1,
+          thickness: 1,
+          weight: 1,
         },
       ],
     } as ICreateOrderDTO;
@@ -190,6 +195,10 @@ describe('Criação de pedidos', () => {
           description: 'Coca-cola',
           quantity: 1,
           price: 10,
+          height: 1,
+          width: 1,
+          thickness: 1,
+          weight: 1,
         },
       ],
     } as ICreateOrderDTO;
@@ -230,6 +239,10 @@ describe('Criação de pedidos', () => {
           description: 'Coca-cola',
           quantity: 1,
           price: 10,
+          height: 1,
+          width: 1,
+          thickness: 1,
+          weight: 1,
         },
       ],
     } as ICreateOrderDTO;
@@ -239,5 +252,75 @@ describe('Criação de pedidos', () => {
       },
     });
     expect(httpResponse.body).toEqual('Invalid coupon');
+  });
+
+  it('should be able to return an error if height, width, thickness or weight is 0 or lower than 0', async () => {
+    const { createOrderController, createUserController } = makeSUT();
+    const createUser = await createUserController.handle({
+      body: { name: 'Fábio', cpf: '529.982.247-25' },
+    });
+
+    const order = {
+      user_id: createUser.body.user.id,
+      coupon: '',
+      items: [
+        {
+          description: 'Coca-cola',
+          quantity: 1,
+          price: 10,
+          height: 0,
+          width: 0,
+          thickness: 0,
+          weight: 1,
+        },
+      ],
+    } as ICreateOrderDTO;
+
+    const httpResponse = await createOrderController.handle({
+      body: {
+        order,
+      },
+    });
+
+    expect(httpResponse.body).toBe(
+      'Some items has invalid dimensions or weight'
+    );
+  });
+
+  it('should be able to return an error if height, width, thickness or weight is 0 or lower than 0', async () => {
+    const { createOrderController, createUserController } = makeSUT();
+    const createUser = await createUserController.handle({
+      body: { name: 'Fábio', cpf: '529.982.247-25' },
+    });
+
+    const order = {
+      user_id: createUser.body.user.id,
+      coupon: '',
+      shipping: {
+        source: '',
+        destination: '',
+      },
+      items: [
+        {
+          description: 'Coca-cola',
+          quantity: 1,
+          price: 10,
+          height: 0,
+          width: 0,
+          thickness: 0,
+          weight: 1,
+        },
+      ],
+    } as ICreateOrderDTO;
+
+    const httpResponse = await createOrderController.handle({
+      body: {
+        order,
+      },
+    });
+
+    expect(httpResponse.body).toBe(
+      'Some items has invalid dimensions or weight'
+    );
   });
 });
