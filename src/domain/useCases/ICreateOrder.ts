@@ -9,8 +9,7 @@ export type ICreateOrdemItemDTO = {
 export type ICreateOrderDTO = {
   user_id: string;
   items: ICreateOrdemItemDTO[];
-  discount: number;
-  total: number;
+  coupon: string;
 };
 
 export interface ICreateOrder {
