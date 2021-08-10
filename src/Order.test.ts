@@ -24,8 +24,19 @@ describe('Order test', () => {
     order.addItem('Guitarra', 1000, 2);
     order.addItem('Amplificador', 5000, 1);
     order.addItem('Cabo', 30, 3);
-    order.addCoupon(new Coupon('VALE20', 20));
+    order.addCoupon(new Coupon('VALE20', 20, new Date('2021-10-10')));
     const total = order.getTotal();
     expect(total).toBe(5672);
+  });
+
+  it('Deve criar um pedido com cupom de desconto expirado', () => {
+    const valid_cpf = '778.278.412-36';
+    const order = new Order(valid_cpf);
+    order.addItem('Guitarra', 1000, 2);
+    order.addItem('Amplificador', 5000, 1);
+    order.addItem('Cabo', 30, 3);
+    order.addCoupon(new Coupon('VALE20', 20, new Date('2020-10-10')));
+    const total = order.getTotal();
+    expect(total).toBe(7090);
   });
 });
