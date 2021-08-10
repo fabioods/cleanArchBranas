@@ -8,4 +8,11 @@ describe('Calculo de fretes', () => {
     const price = FreightCalculator.calculate(item, distance);
     expect(price).toBe(220);
   });
+
+  it('Deve calcular o frete do cabo', () => {
+    const item = new Item('3', 'Cabo', 30, 10, 10, 10, 1);
+    const distance = 1000;
+    const price = FreightCalculator.calculate(item, distance);
+    expect(price).toBe(10);
+  });
 });
