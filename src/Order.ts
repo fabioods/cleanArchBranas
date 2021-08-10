@@ -9,13 +9,16 @@ export class Order {
 
   coupon: Coupon;
 
+  freight: number;
+
   constructor(cpf: string) {
     this.cpf = new CPF(cpf);
     this.items = [];
+    this.freight = 0;
   }
 
-  addItem(description: string, price: number, quantity: number): void {
-    this.items.push(new OrderItem(description, price, quantity));
+  addItem(id: string, price: number, quantity: number): void {
+    this.items.push(new OrderItem(id, price, quantity));
   }
 
   getTotal(): number {
@@ -24,7 +27,7 @@ export class Order {
     }, 0);
 
     if (this.coupon) total -= (this.coupon.percentage / 100) * total;
-
+    total += this.freight;
     return total;
   }
 
