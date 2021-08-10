@@ -7,7 +7,10 @@ export class PlaceOrder {
   orders: Order[];
 
   constructor() {
-    this.coupons = [new Coupon('VALE20', 20)];
+    this.coupons = [
+      new Coupon('VALE20', 20, new Date('2021-10-10')),
+      new Coupon('VALE20_EXPIRED', 20, new Date('2020-10-10')),
+    ];
     this.orders = [];
   }
 
