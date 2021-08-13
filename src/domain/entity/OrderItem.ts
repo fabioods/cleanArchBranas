@@ -1,46 +1,18 @@
 export class OrderItem {
   id: string;
 
-  description: string;
-
   quantity: number;
 
   price: number;
 
   order_id: string;
 
-  height: number;
+  item_id: string;
 
-  width: number;
-
-  thickness: number;
-
-  weight: number;
-
-  constructor(
-    description: string,
-    quantity: number,
-    price: number,
-    height?: number,
-    width?: number,
-    thickness?: number,
-    weight?: number
-  ) {
-    this.description = description;
+  constructor(item_id: string, quantity: number, price: number) {
+    this.item_id = item_id;
     this.quantity = quantity;
     this.price = price;
-    if (height) this.height = height;
-    if (width) this.width = width;
-    if (thickness) this.thickness = thickness;
-    if (weight) this.weight = weight;
-  }
-
-  getVolume(): number {
-    return (this.height * this.width * this.thickness) / 1000000;
-  }
-
-  getDensity(): number {
-    return this.weight / this.getVolume();
   }
 
   getTotal(): number {
