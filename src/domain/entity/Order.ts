@@ -1,18 +1,17 @@
 import { Coupon } from './Coupon';
 import { OrderItem } from './OrderItem';
-import { User } from './User';
 
 export class Order {
   id: string;
 
-  user: User;
+  user_id: string;
 
   items: OrderItem[];
 
   coupon?: Coupon;
 
-  constructor(user: User) {
-    this.user = user;
+  constructor(user_id: string) {
+    this.user_id = user_id;
     this.items = [];
   }
 
