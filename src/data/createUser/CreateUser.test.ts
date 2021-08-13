@@ -1,5 +1,5 @@
-import { CreateUserRepository } from '../../domain/repository/CreateUserRepository';
-import { CreateUserRepositoryMemory } from '../../infra/repository/memory/CreateUserRepositoryMemory';
+import { UserRepository } from '../../domain/repository/UserRepository';
+import { UserRepositoryMemory } from '../../infra/repository/memory/UserRepositoryMemory';
 import { CPFValidator } from '../../utils/cpfValidator/cpfValidator';
 import { CreateUser } from './CreateUser';
 
@@ -15,14 +15,14 @@ const makeCPFValidator = (): CPFValidator => {
 interface MakeSUT {
   createUser: CreateUser;
   cpfValidator: CPFValidator;
-  createUserRepository: CreateUserRepository;
+  userRepository: UserRepository;
 }
 
 const makeSUT = (): MakeSUT => {
   const cpfValidator = makeCPFValidator();
-  const createUserRepository = new CreateUserRepositoryMemory();
-  const createUser = new CreateUser(cpfValidator, createUserRepository);
-  return { cpfValidator, createUser, createUserRepository };
+  const userRepository = new UserRepositoryMemory();
+  const createUser = new CreateUser(cpfValidator, userRepository);
+  return { cpfValidator, createUser, userRepository };
 };
 
 describe('Create a new User', () => {

@@ -1,5 +1,5 @@
 import { User } from '../../domain/entity/User';
-import { CreateUserRepository } from '../../domain/repository/CreateUserRepository';
+import { UserRepository } from '../../domain/repository/UserRepository';
 import { CPFValidator } from '../../utils/cpfValidator/cpfValidator';
 
 type CreateUserDTO = {
@@ -10,7 +10,7 @@ type CreateUserDTO = {
 export class CreateUser {
   constructor(
     private cpfValidator: CPFValidator,
-    private createUserRepository: CreateUserRepository
+    private createUserRepository: UserRepository
   ) {}
 
   async execute(userDTO: CreateUserDTO): Promise<User> {
