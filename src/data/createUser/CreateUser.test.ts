@@ -5,6 +5,7 @@ import { CreateUser } from './CreateUser';
 
 const makeCPFValidator = (): CPFValidator => {
   class CPFValidatorAdapter implements CPFValidator {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     validate(cpf: string): boolean {
       return true;
     }
