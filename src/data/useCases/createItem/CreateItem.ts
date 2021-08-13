@@ -1,5 +1,5 @@
-import { Item } from '../../domain/entity/Item';
-import { ItemRepository } from '../../domain/repository/ItemRepository';
+import { Item } from '../../../domain/entity/Item';
+import { ItemRepository } from '../../../domain/repository/ItemRepository';
 
 type ItemDTO = {
   description: string;

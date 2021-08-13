@@ -1,6 +1,6 @@
-import { User } from '../../domain/entity/User';
-import { UserRepository } from '../../domain/repository/UserRepository';
-import { CPFValidator } from '../../utils/cpfValidator/cpfValidator';
+import { User } from '../../../domain/entity/User';
+import { UserRepository } from '../../../domain/repository/UserRepository';
+import { CPFValidator } from '../../../utils/cpfValidator/cpfValidator';
 
 type CreateUserDTO = {
   name: string;

@@ -1,6 +1,6 @@
-import { UserRepository } from '../../domain/repository/UserRepository';
-import { UserRepositoryMemory } from '../../infra/repository/memory/UserRepositoryMemory';
-import { CPFValidator } from '../../utils/cpfValidator/cpfValidator';
+import { UserRepository } from '../../../domain/repository/UserRepository';
+import { UserRepositoryMemory } from '../../../infra/repository/memory/UserRepositoryMemory';
+import { CPFValidator } from '../../../utils/cpfValidator/cpfValidator';
 import { CreateUser } from './CreateUser';
 
 const makeCPFValidator = (): CPFValidator => {

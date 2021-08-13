@@ -1,5 +1,5 @@
-import { Item } from '../../domain/entity/Item';
-import { ItemRepositoryMemory } from '../../infra/repository/memory/ItemRepositoryMemory';
+import { Item } from '../../../domain/entity/Item';
+import { ItemRepositoryMemory } from '../../../infra/repository/memory/ItemRepositoryMemory';
 import { CreateItem } from './CreateItem';
 
 interface MakeSUT {
