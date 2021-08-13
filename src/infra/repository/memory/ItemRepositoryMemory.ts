@@ -8,6 +8,10 @@ export class ItemRepositoryMemory implements ItemRepository {
     this.items = [];
   }
 
+  async getById(id: string): Promise<Item | undefined> {
+    return this.items.find(item => item.id === id);
+  }
+
   async save(item: Item): Promise<Item> {
     this.items.push(Object.assign(item, { id: `${this.items.length + 1}` }));
     return item;
