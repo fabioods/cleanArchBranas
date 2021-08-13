@@ -103,25 +103,7 @@ describe('Place a new Order', () => {
       weight: 3,
       price: 1000,
     };
-    const amplificador = {
-      description: 'Amplificador',
-      height: 50,
-      width: 50,
-      length: 50,
-      weight: 22,
-      price: 5000,
-    };
-    const cabo = {
-      description: 'Cabo',
-      height: 10,
-      width: 10,
-      length: 10,
-      weight: 1,
-      price: 30,
-    };
     await createItem.execute(guitarra);
-    await createItem.execute(amplificador);
-    await createItem.execute(cabo);
     const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
 
     const order = {
