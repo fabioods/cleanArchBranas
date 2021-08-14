@@ -115,7 +115,7 @@ describe('Place a new Order', () => {
         },
       ],
     };
-    const newOrder = await placeOrder.execute(order);
+    const { order: newOrder } = await placeOrder.execute(order);
     expect(newOrder.id).toBe('1');
   });
 });

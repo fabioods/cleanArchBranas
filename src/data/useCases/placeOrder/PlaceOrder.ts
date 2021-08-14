@@ -13,6 +13,10 @@ type PlaceOrderInput = {
   items: PlaceOrderItem[];
 };
 
+type PlaceOrderOutput = {
+  order: Order;
+};
+
 export class PlaceOrder {
   constructor(
     private itemRepository: ItemRepository,
@@ -20,7 +24,7 @@ export class PlaceOrder {
     private userRepository: UserRepository
   ) {}
 
-  async execute(orderDTO: PlaceOrderInput): Promise<Order> {
+  async execute(orderDTO: PlaceOrderInput): Promise<PlaceOrderOutput> {
     if (!orderDTO.user_id) throw new Error('User id is required');
     if (orderDTO.items.length === 0) throw new Error('items is required');
 
@@ -38,6 +42,6 @@ export class PlaceOrder {
 
     const newOrder = await this.orderRepository.save(order);
 
-    return newOrder;
+    return { order: newOrder };
   }
 }
