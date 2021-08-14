@@ -20,4 +20,12 @@ describe('Calculate Freight', () => {
     const price = await freightCalculator.calculatePrice(distance, item);
     expect(price).toBe(100);
   });
+
+  it('should return 10 when price is lower than 10', async () => {
+    const distance = 1000;
+    const item = new Item('any_description', 10, 1, 1, 1, 1);
+    const freightCalculator = new FakeFreightCalculator();
+    const price = await freightCalculator.calculatePrice(distance, item);
+    expect(price).toBe(10);
+  });
 });
