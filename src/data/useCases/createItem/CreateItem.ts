@@ -14,11 +14,6 @@ export class CreateItem {
   constructor(private itemRepository: ItemRepository) {}
 
   async execute(itemDTO: ItemDTO): Promise<Item> {
-    Object.entries(itemDTO).forEach(([key, value]) => {
-      if (typeof value === 'number' && value < 0)
-        throw new Error(`${key} must be positive`);
-    });
-
     const item = new Item(
       itemDTO.description,
       itemDTO.height,

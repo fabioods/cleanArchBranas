@@ -21,6 +21,9 @@ export class Item {
     weight: number,
     price: number
   ) {
+    if (height < 0 || width < 0 || length < 0 || weight < 0 || price < 0)
+      throw new Error('Invalid height, width, length, weight or price');
+
     this.description = description;
     this.height = height;
     this.width = width;
