@@ -1,4 +1,5 @@
 import { Order } from '../../../domain/entity/Order';
+import { CouponRepository } from '../../../domain/repository/CouponRepository';
 import { ItemRepository } from '../../../domain/repository/ItemRepository';
 import { OrderRepository } from '../../../domain/repository/OrderRepository';
 import { UserRepository } from '../../../domain/repository/UserRepository';
@@ -8,7 +9,8 @@ export class PlaceOrder {
   constructor(
     private itemRepository: ItemRepository,
     private orderRepository: OrderRepository,
-    private userRepository: UserRepository
+    private userRepository: UserRepository,
+    private couponRepository: CouponRepository
   ) {}
 
   async execute(orderDTO: PlaceOrderInput): Promise<PlaceOrderOutput> {
@@ -25,6 +27,14 @@ export class PlaceOrder {
       const item = await this.itemRepository.getById(itemDTO.id);
       if (!item) throw new Error(`Item with id ${itemDTO.id} not found`);
       order.addItem(item.id, itemDTO.quantity, item.price);
+    }
+    if (orderDTO.coupon_code) {
+      const coupon = await this.couponRepository.getByCode(
+        orderDTO.coupon_code
+      );
+      if (!coupon)
+        throw new Error(`Coupon with code ${orderDTO.coupon_code} not found`);
+      order.addCoupon(coupon);
     }
 
     const newOrder = await this.orderRepository.save(order);

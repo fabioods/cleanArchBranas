@@ -8,6 +8,7 @@ export type PlaceOrderItem = {
 export type PlaceOrderInput = {
   user_id: string | null;
   items: PlaceOrderItem[];
+  coupon_code?: string;
 };
 
 export type PlaceOrderOutput = {
