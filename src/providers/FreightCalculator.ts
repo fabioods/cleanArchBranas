@@ -1,3 +1,10 @@
+import { Item } from '../domain/entity/Item';
+
 export interface FreightCalculator {
-  calculate(zipCodeOrigin: string, zipCodeDestination: string): Promise<number>;
+  calculateDistance(
+    zipCodeOrigin: string,
+    zipCodeDestination: string
+  ): Promise<number>;
+
+  calculatePrice(distance: number, item: Item): Promise<number>;
 }
