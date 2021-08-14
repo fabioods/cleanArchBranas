@@ -18,4 +18,8 @@ export class OrderItem {
   getTotal(): number {
     return this.quantity * this.price;
   }
+
+  setOrderId(id: string): void {
+    this.order_id = id;
+  }
 }

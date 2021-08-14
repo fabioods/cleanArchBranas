@@ -9,7 +9,9 @@ export class OrderRepositoryMemory implements OrderRepository {
   }
 
   async save(order: Order): Promise<Order> {
-    this.orders.push(Object.assign(order, { id: `${this.orders.length + 1}` }));
+    const order_id = `${this.orders.length + 1}`;
+    order.setId(order_id);
+    this.orders.push(order);
     return order;
   }
 }

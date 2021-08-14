@@ -29,4 +29,9 @@ export class Order {
   public addCoupon(coupon: Coupon): void {
     this.coupon = coupon;
   }
+
+  public setId(id: string): void {
+    this.id = id;
+    this.items.forEach(item => item.setOrderId(id));
+  }
 }
