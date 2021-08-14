@@ -10,14 +10,18 @@ export class Order {
 
   coupon?: Coupon;
 
+  freight: number;
+
   constructor(user_id: string) {
     this.user_id = user_id;
     this.items = [];
+    this.freight = 0;
   }
 
   getTotal(): number {
     let total = this.items.reduce((acc, item) => acc + item.getTotal(), 0);
     if (this.coupon) total -= (this.coupon.percentage * total) / 100;
+    if (this.freight) total += this.freight;
     return total;
   }
 
@@ -28,6 +32,10 @@ export class Order {
 
   public addCoupon(coupon: Coupon): void {
     this.coupon = coupon;
+  }
+
+  public incrementFreight(value: number): void {
+    this.freight += value;
   }
 
   public setId(id: string): void {

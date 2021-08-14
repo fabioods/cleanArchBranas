@@ -5,10 +5,16 @@ export type PlaceOrderItem = {
   quantity: number;
 };
 
+export type PlaceOrderFreight = {
+  zipCodeOrigin: string;
+  zipCodeDestination: string;
+};
+
 export type PlaceOrderInput = {
   user_id: string | null;
   items: PlaceOrderItem[];
   coupon_code?: string;
+  freight: PlaceOrderFreight;
 };
 
 export type PlaceOrderOutput = {
