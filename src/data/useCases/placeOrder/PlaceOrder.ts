@@ -2,20 +2,7 @@ import { Order } from '../../../domain/entity/Order';
 import { ItemRepository } from '../../../domain/repository/ItemRepository';
 import { OrderRepository } from '../../../domain/repository/OrderRepository';
 import { UserRepository } from '../../../domain/repository/UserRepository';
-
-type PlaceOrderItem = {
-  id: string;
-  quantity: number;
-};
-
-type PlaceOrderInput = {
-  user_id: string | null;
-  items: PlaceOrderItem[];
-};
-
-type PlaceOrderOutput = {
-  order: Order;
-};
+import { PlaceOrderInput, PlaceOrderOutput } from './PlaceOrderDTO';
 
 export class PlaceOrder {
   constructor(

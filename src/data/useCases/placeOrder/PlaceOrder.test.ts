@@ -5,6 +5,7 @@ import { CPFValidator } from '../../../utils/cpfValidator/cpfValidator';
 import { CreateItem } from '../createItem/CreateItem';
 import { CreateUser } from '../createUser/CreateUser';
 import { PlaceOrder } from './PlaceOrder';
+import { PlaceOrderInput } from './PlaceOrderDTO';
 
 interface MakeSUT {
   placeOrder: PlaceOrder;
@@ -46,7 +47,7 @@ describe('Place a new Order', () => {
     const order = {
       user_id: user.id,
       items: [],
-    };
+    } as PlaceOrderInput;
     const newOrder = placeOrder.execute(order);
     await expect(newOrder).rejects.toThrow();
   });
@@ -56,7 +57,7 @@ describe('Place a new Order', () => {
     const order = {
       user_id: null,
       items: [],
-    };
+    } as PlaceOrderInput;
     const newOrder = placeOrder.execute(order);
     await expect(newOrder).rejects.toThrow();
   });
@@ -72,7 +73,7 @@ describe('Place a new Order', () => {
           quantity: 2,
         },
       ],
-    };
+    } as PlaceOrderInput;
 
     const newOrder = placeOrder.execute(order);
     await expect(newOrder).rejects.toThrow();
@@ -88,7 +89,7 @@ describe('Place a new Order', () => {
           quantity: 2,
         },
       ],
-    };
+    } as PlaceOrderInput;
     const newOrder = placeOrder.execute(order);
     await expect(newOrder).rejects.toThrow();
   });
@@ -114,7 +115,7 @@ describe('Place a new Order', () => {
           quantity: 2,
         },
       ],
-    };
+    } as PlaceOrderInput;
     const { order: newOrder } = await placeOrder.execute(order);
     expect(newOrder.id).toBe('1');
   });
