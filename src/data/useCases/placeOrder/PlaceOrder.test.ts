@@ -1,3 +1,4 @@
+import { FakeFreightCalculator } from '../../../infra/gateways/memory/FakeFreightCalculator';
 import { CouponRepositoryMemory } from '../../../infra/repository/memory/CouponRepositoryMemory';
 import { ItemRepositoryMemory } from '../../../infra/repository/memory/ItemRepositoryMemory';
 import { OrderRepositoryMemory } from '../../../infra/repository/memory/OrderRepositoryMemory';
@@ -39,11 +40,13 @@ const makeSUT = (): MakeSUT => {
   const createCoupon = new CreateCoupon(couponRepository);
 
   const orderRepository = new OrderRepositoryMemory();
+  const freightCalculator = new FakeFreightCalculator();
   const placeOrder = new PlaceOrder(
     itemRepository,
     orderRepository,
     userRepository,
-    couponRepository
+    couponRepository,
+    freightCalculator
   );
   return { placeOrder, createUser, createItem, createCoupon };
 };
@@ -55,6 +58,10 @@ describe('Place a new Order', () => {
     const order = {
       user_id: user.id,
       items: [],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
     } as PlaceOrderInput;
     const newOrder = placeOrder.execute(order);
     await expect(newOrder).rejects.toThrow();
@@ -65,6 +72,10 @@ describe('Place a new Order', () => {
     const order = {
       user_id: null,
       items: [],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
     } as PlaceOrderInput;
     const newOrder = placeOrder.execute(order);
     await expect(newOrder).rejects.toThrow();
@@ -81,8 +92,11 @@ describe('Place a new Order', () => {
           quantity: 2,
         },
       ],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
     } as PlaceOrderInput;
-
     const newOrder = placeOrder.execute(order);
     await expect(newOrder).rejects.toThrow();
   });
@@ -123,6 +137,10 @@ describe('Place a new Order', () => {
           quantity: 2,
         },
       ],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
     } as PlaceOrderInput;
     const { order: newOrder } = await placeOrder.execute(order);
     expect(newOrder.id).toBe('1');
@@ -150,6 +168,10 @@ describe('Place a new Order', () => {
         },
       ],
       coupon_code: 'any_coupon',
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
     } as PlaceOrderInput;
     const placeOrderOutput = placeOrder.execute(order);
     await expect(placeOrderOutput).rejects.toThrow();
@@ -187,8 +209,42 @@ describe('Place a new Order', () => {
         },
       ],
       coupon_code: 'VALE20',
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
     } as PlaceOrderInput;
     const { order } = await placeOrder.execute(orderDto);
-    expect(order.coupon).toBeDefined();
+    expect(order.getTotal()).toBe(1660);
+  });
+
+  it('should  create a new Order with freight', async () => {
+    const { placeOrder, createUser, createItem } = makeSUT();
+    const guitarra = {
+      description: 'Guitarra',
+      height: 50,
+      width: 100,
+      length: 15,
+      weight: 3,
+      price: 1000,
+    };
+    await createItem.execute(guitarra);
+    const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
+
+    const orderDto = {
+      user_id: user.id,
+      items: [
+        {
+          id: '1',
+          quantity: 2,
+        },
+      ],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
+    } as PlaceOrderInput;
+    const { order } = await placeOrder.execute(orderDto);
+    expect(order.getTotal()).toBe(2060);
   });
 });
