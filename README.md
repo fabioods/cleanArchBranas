@@ -37,7 +37,7 @@ yarn run test
 
 👤 **Fábio dos Santos <fah_ds@live.com>**
 
-- Twitter: [@fah_ds](https://twitter.com/fah_ds)
+- Twitter: [@fabioods](https://twitter.com/fabioods)
 - Github: [@fabioods](https://github.com/fabioods)
 - LinkedIn: [@fabioods](https://linkedin.com/in/fabioods)
 
