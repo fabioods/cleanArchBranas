@@ -1,7 +1,10 @@
+import { CouponRepositoryMemory } from '../../../infra/repository/memory/CouponRepositoryMemory';
 import { ItemRepositoryMemory } from '../../../infra/repository/memory/ItemRepositoryMemory';
 import { OrderRepositoryMemory } from '../../../infra/repository/memory/OrderRepositoryMemory';
 import { UserRepositoryMemory } from '../../../infra/repository/memory/UserRepositoryMemory';
 import { CPFValidator } from '../../../utils/cpfValidator/cpfValidator';
+import { CreateCoupon } from '../createCoupon/CreateCoupon';
+import { CreateCouponInput } from '../createCoupon/CreateCouponDTO';
 import { CreateItem } from '../createItem/CreateItem';
 import { CreateUser } from '../createUser/CreateUser';
 import { PlaceOrder } from './PlaceOrder';
@@ -11,6 +14,7 @@ interface MakeSUT {
   placeOrder: PlaceOrder;
   createUser: CreateUser;
   createItem: CreateItem;
+  createCoupon: CreateCoupon;
 }
 
 const cpfValidatorAdapter = (): CPFValidator => {
@@ -31,13 +35,17 @@ const makeSUT = (): MakeSUT => {
   const itemRepository = new ItemRepositoryMemory();
   const createItem = new CreateItem(itemRepository);
 
+  const couponRepository = new CouponRepositoryMemory();
+  const createCoupon = new CreateCoupon(couponRepository);
+
   const orderRepository = new OrderRepositoryMemory();
   const placeOrder = new PlaceOrder(
     itemRepository,
     orderRepository,
-    userRepository
+    userRepository,
+    couponRepository
   );
-  return { placeOrder, createUser, createItem };
+  return { placeOrder, createUser, createItem, createCoupon };
 };
 
 describe('Place a new Order', () => {
@@ -118,5 +126,69 @@ describe('Place a new Order', () => {
     } as PlaceOrderInput;
     const { order: newOrder } = await placeOrder.execute(order);
     expect(newOrder.id).toBe('1');
+  });
+
+  it('should not create a new Order with a coupon who does not exists', async () => {
+    const { placeOrder, createUser, createItem } = makeSUT();
+    const guitarra = {
+      description: 'Guitarra',
+      height: 50,
+      width: 100,
+      length: 15,
+      weight: 3,
+      price: 1000,
+    };
+    await createItem.execute(guitarra);
+    const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
+
+    const order = {
+      user_id: user.id,
+      items: [
+        {
+          id: '1',
+          quantity: 2,
+        },
+      ],
+      coupon_code: 'any_coupon',
+    } as PlaceOrderInput;
+    const placeOrderOutput = placeOrder.execute(order);
+    await expect(placeOrderOutput).rejects.toThrow();
+  });
+
+  it('should  create a new Order with a valid coupon', async () => {
+    const { placeOrder, createUser, createItem, createCoupon } = makeSUT();
+    const guitarra = {
+      description: 'Guitarra',
+      height: 50,
+      width: 100,
+      length: 15,
+      weight: 3,
+      price: 1000,
+    };
+    await createItem.execute(guitarra);
+    const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const couponVale20 = {
+      description: 'VALE20',
+      percentage: 20,
+      expiresIn: tomorrow,
+    } as CreateCouponInput;
+    await createCoupon.execute(couponVale20);
+
+    const orderDto = {
+      user_id: user.id,
+      items: [
+        {
+          id: '1',
+          quantity: 2,
+        },
+      ],
+      coupon_code: 'VALE20',
+    } as PlaceOrderInput;
+    const { order } = await placeOrder.execute(orderDto);
+    expect(order.coupon).toBeDefined();
   });
 });
