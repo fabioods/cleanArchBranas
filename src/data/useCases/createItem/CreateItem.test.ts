@@ -34,26 +34,4 @@ describe('Create item', () => {
     const newItem = await createItem.execute(item);
     expect(newItem.id).toBe('1');
   });
-
-  it('should not be able to create a new Item with invalid values', async () => {
-    const { createItem } = makeSUT();
-    const itemDTO = {
-      description: 'any_description',
-      height: -10,
-      width: 10,
-      length: 10,
-      weight: 10,
-      price: 1000,
-    };
-    const item = new Item(
-      itemDTO.description,
-      itemDTO.height,
-      itemDTO.width,
-      itemDTO.length,
-      itemDTO.weight,
-      itemDTO.price
-    );
-    const newItem = createItem.execute(item);
-    await expect(newItem).rejects.toThrow();
-  });
 });

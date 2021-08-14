@@ -6,6 +6,12 @@ describe('Create an item object', () => {
     expect(item).toBeTruthy();
   });
 
+  it('should not create an item with negative values', () => {
+    expect(() => new Item('any_description', -1, 1, 1, 1, 1)).toThrow(
+      new Error('Invalid height, width, length, weight or price')
+    );
+  });
+
   it('should create an item with volume 0,001', () => {
     const item = new Item('any_description', 10, 10, 10, 10, 1000);
     expect(item.getVolume()).toBe(0.001);
