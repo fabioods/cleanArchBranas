@@ -18,11 +18,18 @@ export class Order {
     this.freight = 0;
   }
 
-  getTotal(): number {
-    let total = this.items.reduce((acc, item) => acc + item.getTotal(), 0);
-    if (this.coupon) total -= (this.coupon.percentage * total) / 100;
+  public getTotal(): number {
+    let total =
+      this.items.reduce((acc, item) => acc + item.getTotal(), 0) -
+      this.getDiscount();
     if (this.freight) total += this.freight;
     return total;
+  }
+
+  public getDiscount(): number {
+    const total = this.items.reduce((acc, item) => acc + item.getTotal(), 0);
+    if (this.coupon) return (this.coupon.percentage * total) / 100;
+    return 0;
   }
 
   public addItem(item_id: string, quantity: number, price: number): void {
