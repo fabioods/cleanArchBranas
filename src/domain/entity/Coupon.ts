@@ -14,6 +14,6 @@ export class Coupon {
   }
 
   isValid(): boolean {
-    return this.expiresIn && this.expiresIn.getTime() > Date.now();
+    return this.expiresIn.getTime() >= Date.now();
   }
 }
