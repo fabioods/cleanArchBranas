@@ -272,4 +272,50 @@ describe('Place a new Order', () => {
     const orderId = `${new Date().getFullYear()}00000001`;
     expect(order_id).toBe(orderId);
   });
+
+  it('should return the correct values for an order created', async () => {
+    const { placeOrder, createUser, createItem } = makeSUT();
+    const guitarra = {
+      description: 'Guitarra',
+      height: 50,
+      width: 100,
+      length: 15,
+      weight: 3,
+      price: 1000,
+    };
+    await createItem.execute(guitarra);
+    const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
+    const {
+      discount,
+      freight,
+      items,
+      order_id,
+      total,
+      user: { cpf, name },
+      zipCodeDestination,
+    } = await placeOrder.execute({
+      user_id: user.id,
+      items: [
+        {
+          id: '1',
+          quantity: 2,
+        },
+      ],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
+    });
+    const orderId = `${new Date().getFullYear()}00000001`;
+    expect(order_id).toBe(orderId);
+    expect(discount).toBe(0);
+    expect(freight).toBe(60);
+    expect(items).toEqual([
+      { description: 'Guitarra', price: 1000, quantity: 2 },
+    ]);
+    expect(total).toBe(2060);
+    expect(cpf).toBe('any_cpf');
+    expect(name).toBe('any_name');
+    expect(zipCodeDestination).toBe('any_destination');
+  });
 });
