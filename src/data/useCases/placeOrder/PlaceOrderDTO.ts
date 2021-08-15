@@ -19,4 +19,6 @@ export type PlaceOrderInput = {
 
 export type PlaceOrderOutput = {
   order: Order;
+  total: number;
+  freight: number;
 };
