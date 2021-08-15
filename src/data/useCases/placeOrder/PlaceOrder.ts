@@ -4,7 +4,11 @@ import { ItemRepository } from '../../../domain/repository/ItemRepository';
 import { OrderRepository } from '../../../domain/repository/OrderRepository';
 import { UserRepository } from '../../../domain/repository/UserRepository';
 import { FreightCalculator } from '../../../providers/FreightCalculator';
-import { PlaceOrderInput, PlaceOrderOutput } from './PlaceOrderDTO';
+import {
+  PlaceOrderInput,
+  PlaceOrderOutput,
+  PlaceOrderOutputItem,
+} from './PlaceOrderDTO';
 
 export class PlaceOrder {
   constructor(
@@ -27,6 +31,8 @@ export class PlaceOrder {
       orderDTO.freight.zipCodeOrigin,
       orderDTO.freight.zipCodeDestination
     );
+
+    const itemsDTO: PlaceOrderOutputItem[] = [];
     for (let index = 0; index < orderDTO.items.length; index++) {
       const itemDTO = orderDTO.items[index];
       // eslint-disable-next-line no-await-in-loop
@@ -36,7 +42,13 @@ export class PlaceOrder {
       // eslint-disable-next-line no-await-in-loop
       const price = await this.freightCalculator.calculatePrice(distance, item);
       order.incrementFreight(price * itemDTO.quantity);
+      itemsDTO.push({
+        description: item.description,
+        price: item.price,
+        quantity: itemDTO.quantity,
+      });
     }
+
     if (orderDTO.coupon_code) {
       const coupon = await this.couponRepository.getByCode(
         orderDTO.coupon_code
@@ -49,10 +61,16 @@ export class PlaceOrder {
     const newOrder = await this.orderRepository.save(order);
 
     return {
-      order: newOrder,
+      order_id: newOrder.id,
+      user: {
+        cpf: user.cpf,
+        name: user.name,
+      },
       freight: order.freight,
       total: order.getTotal(),
-      order_id: newOrder.id,
+      discount: order.getDiscount(),
+      items: itemsDTO,
+      zipCodeDestination: orderDTO.freight.zipCodeDestination,
     };
   }
 }

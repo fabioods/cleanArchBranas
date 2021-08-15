@@ -1,5 +1,3 @@
-import { Order } from '../../../domain/entity/Order';
-
 export type PlaceOrderItem = {
   id: string;
   quantity: number;
@@ -17,9 +15,21 @@ export type PlaceOrderInput = {
   freight: PlaceOrderFreight;
 };
 
+export type PlaceOrderOutputItem = {
+  description: string;
+  price: number;
+  quantity: number;
+};
+
 export type PlaceOrderOutput = {
-  order: Order;
+  order_id: string;
+  zipCodeDestination: string;
+  user: {
+    name: string;
+    cpf: string;
+  };
+  items: PlaceOrderOutputItem[];
+  discount: number;
   total: number;
   freight: number;
-  order_id: string;
 };
