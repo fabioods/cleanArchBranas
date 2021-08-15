@@ -55,36 +55,34 @@ describe('Place a new Order', () => {
   it('should not create a new Order with no items', async () => {
     const { placeOrder, createUser } = makeSUT();
     const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
-    const order = {
+    const newOrder = placeOrder.execute({
       user_id: user.id,
       items: [],
       freight: {
         zipCodeDestination: 'any_destination',
         zipCodeOrigin: 'any_origin',
       },
-    } as PlaceOrderInput;
-    const newOrder = placeOrder.execute(order);
+    });
     await expect(newOrder).rejects.toThrow();
   });
 
   it('should not create a new Order with no user defined', async () => {
     const { placeOrder } = makeSUT();
-    const order = {
+    const newOrder = placeOrder.execute({
       user_id: null,
       items: [],
       freight: {
         zipCodeDestination: 'any_destination',
         zipCodeOrigin: 'any_origin',
       },
-    } as PlaceOrderInput;
-    const newOrder = placeOrder.execute(order);
+    });
     await expect(newOrder).rejects.toThrow();
   });
 
   it('should not create a new Order with an item id who does not exists', async () => {
     const { placeOrder, createUser } = makeSUT();
     const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
-    const order = {
+    const newOrder = placeOrder.execute({
       user_id: user.id,
       items: [
         {
@@ -96,14 +94,13 @@ describe('Place a new Order', () => {
         zipCodeDestination: 'any_destination',
         zipCodeOrigin: 'any_origin',
       },
-    } as PlaceOrderInput;
-    const newOrder = placeOrder.execute(order);
+    });
     await expect(newOrder).rejects.toThrow();
   });
 
   it('should not create a new Order with an user who does not exists', async () => {
     const { placeOrder } = makeSUT();
-    const order = {
+    const newOrder = placeOrder.execute({
       user_id: '1',
       items: [
         {
@@ -111,8 +108,11 @@ describe('Place a new Order', () => {
           quantity: 2,
         },
       ],
-    } as PlaceOrderInput;
-    const newOrder = placeOrder.execute(order);
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
+    });
     await expect(newOrder).rejects.toThrow();
   });
 
@@ -129,7 +129,7 @@ describe('Place a new Order', () => {
     await createItem.execute(guitarra);
     const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
 
-    const order = {
+    const { total } = await placeOrder.execute({
       user_id: user.id,
       items: [
         {
@@ -141,9 +141,8 @@ describe('Place a new Order', () => {
         zipCodeDestination: 'any_destination',
         zipCodeOrigin: 'any_origin',
       },
-    } as PlaceOrderInput;
-    const { order: newOrder } = await placeOrder.execute(order);
-    expect(newOrder.id).toBe('1');
+    });
+    expect(total).toBe(2060);
   });
 
   it('should not create a new Order with a coupon who does not exists', async () => {
@@ -177,7 +176,7 @@ describe('Place a new Order', () => {
     await expect(placeOrderOutput).rejects.toThrow();
   });
 
-  it('should  create a new Order with a valid coupon', async () => {
+  it('should create a new Order with a valid coupon', async () => {
     const { placeOrder, createUser, createItem, createCoupon } = makeSUT();
     const guitarra = {
       description: 'Guitarra',
@@ -200,7 +199,7 @@ describe('Place a new Order', () => {
     } as CreateCouponInput;
     await createCoupon.execute(couponVale20);
 
-    const orderDto = {
+    const { total } = await placeOrder.execute({
       user_id: user.id,
       items: [
         {
@@ -213,12 +212,11 @@ describe('Place a new Order', () => {
         zipCodeDestination: 'any_destination',
         zipCodeOrigin: 'any_origin',
       },
-    } as PlaceOrderInput;
-    const { order } = await placeOrder.execute(orderDto);
-    expect(order.getTotal()).toBe(1660);
+    });
+    expect(total).toBe(1660);
   });
 
-  it('should  create a new Order with freight', async () => {
+  it('should create a new Order with freight', async () => {
     const { placeOrder, createUser, createItem } = makeSUT();
     const guitarra = {
       description: 'Guitarra',
@@ -230,8 +228,7 @@ describe('Place a new Order', () => {
     };
     await createItem.execute(guitarra);
     const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
-
-    const orderDto = {
+    const { freight } = await placeOrder.execute({
       user_id: user.id,
       items: [
         {
@@ -243,8 +240,7 @@ describe('Place a new Order', () => {
         zipCodeDestination: 'any_destination',
         zipCodeOrigin: 'any_origin',
       },
-    } as PlaceOrderInput;
-    const { order } = await placeOrder.execute(orderDto);
-    expect(order.getTotal()).toBe(2060);
+    });
+    expect(freight).toBe(60);
   });
 });
