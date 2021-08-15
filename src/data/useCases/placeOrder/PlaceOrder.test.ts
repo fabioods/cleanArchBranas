@@ -243,4 +243,33 @@ describe('Place a new Order', () => {
     });
     expect(freight).toBe(60);
   });
+
+  it('should create a new Order with correct pattern', async () => {
+    const { placeOrder, createUser, createItem } = makeSUT();
+    const guitarra = {
+      description: 'Guitarra',
+      height: 50,
+      width: 100,
+      length: 15,
+      weight: 3,
+      price: 1000,
+    };
+    await createItem.execute(guitarra);
+    const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
+    const { order_id } = await placeOrder.execute({
+      user_id: user.id,
+      items: [
+        {
+          id: '1',
+          quantity: 2,
+        },
+      ],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
+    });
+    const orderId = `${new Date().getFullYear()}00000001`;
+    expect(order_id).toBe(orderId);
+  });
 });
