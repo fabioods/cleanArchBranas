@@ -9,7 +9,9 @@ export class OrderRepositoryMemory implements OrderRepository {
   }
 
   async save(order: Order): Promise<Order> {
-    const order_id = `${this.orders.length + 1}`;
+    const order_id = `${new Date().getFullYear()}${String(
+      this.orders.length + 1
+    ).padStart(8, '0')}`;
     order.setId(order_id);
     this.orders.push(order);
     return order;

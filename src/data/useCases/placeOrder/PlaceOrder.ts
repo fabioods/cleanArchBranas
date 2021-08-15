@@ -48,6 +48,11 @@ export class PlaceOrder {
 
     const newOrder = await this.orderRepository.save(order);
 
-    return { order: newOrder, freight: order.freight, total: order.getTotal() };
+    return {
+      order: newOrder,
+      freight: order.freight,
+      total: order.getTotal(),
+      order_id: newOrder.id,
+    };
   }
 }

@@ -21,4 +21,5 @@ export type PlaceOrderOutput = {
   order: Order;
   total: number;
   freight: number;
+  order_id: string;
 };
