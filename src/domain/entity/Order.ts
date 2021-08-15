@@ -31,7 +31,7 @@ export class Order {
   }
 
   public addCoupon(coupon: Coupon): void {
-    this.coupon = coupon;
+    if (coupon.isValid()) this.coupon = coupon;
   }
 
   public incrementFreight(value: number): void {

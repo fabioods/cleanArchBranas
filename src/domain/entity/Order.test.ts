@@ -10,12 +10,23 @@ describe('Create Order', () => {
     expect(order.getTotal()).toBe(11);
   });
 
-  it('should create a new order a coupon for discount', () => {
+  it('should create a new order with a coupon for discount', () => {
     const coupon = new Coupon('Coupon X', 10, new Date());
     const order = new Order('any_user_id');
     order.addItem('1', 2, 2);
     order.addItem('2', 2, 3);
     order.addCoupon(coupon);
     expect(order.getTotal()).toBe(9);
+  });
+
+  it('should create a new order with a coupon not valid', () => {
+    const yeasterday = new Date();
+    yeasterday.setDate(yeasterday.getDate() - 1);
+    const coupon = new Coupon('Coupon X', 10, yeasterday);
+    const order = new Order('any_user_id');
+    order.addItem('1', 2, 2);
+    order.addItem('2', 2, 3);
+    order.addCoupon(coupon);
+    expect(order.getTotal()).toBe(10);
   });
 });
