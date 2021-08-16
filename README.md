@@ -30,7 +30,7 @@ yarn install
 ## Run tests
 
 ```sh
-yarn run test
+yarn test
 ```
 
 ## Author
