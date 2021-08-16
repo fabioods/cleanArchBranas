@@ -1,4 +1,4 @@
-import { Item } from './Item';
+import { Item } from '../entity/Item';
 
 export class FreightCalculator {
   static calculate(item: Item, distance: number): number {

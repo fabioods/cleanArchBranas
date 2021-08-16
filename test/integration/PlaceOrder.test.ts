@@ -1,9 +1,9 @@
-import CouponRepositoryMemory from './CouponRepositoryMemory';
-import ItemRepositoryMemory from './ItemRepositoryMemory';
-import OrderRepositoryMemory from './OrderRepositoryMemory';
-import { PlaceOrder } from './PlaceOrder';
-import { PlaceOrderInput } from './PlaceOrderInput';
-import { ZipcodeCalculatorAPIMemory } from './ZipcodeCalculatorAPIMemory';
+import { PlaceOrder } from '../../src/application/PlaceOrder';
+import { PlaceOrderInput } from '../../src/application/PlaceOrderInput';
+import CouponRepositoryMemory from '../../src/infra/repository/memory/CouponRepositoryMemory';
+import ItemRepositoryMemory from '../../src/infra/repository/memory/ItemRepositoryMemory';
+import OrderRepositoryMemory from '../../src/infra/repository/memory/OrderRepositoryMemory';
+import { ZipcodeCalculatorAPIMemory } from '../../src/infra/gateway/memory/ZipcodeCalculatorAPIMemory';
 
 describe('Realizar pedido', () => {
   it('Deve fazer um pedido', async () => {

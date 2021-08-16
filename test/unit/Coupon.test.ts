@@ -1,4 +1,4 @@
-import { Coupon } from './Coupon';
+import { Coupon } from '../../src/domain/entity/Coupon';
 
 describe('Test Coupon object creation', () => {
   it('verificar se o cupom está expirado', () => {

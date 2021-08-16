@@ -1,4 +1,4 @@
-import { Item } from './Item';
+import { Item } from '../../src/domain/entity/Item';
 
 describe('Criação do objeto de item', () => {
   it('deve calcular o volume de um item', () => {

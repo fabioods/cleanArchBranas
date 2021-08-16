@@ -1,12 +1,11 @@
-import { Coupon } from './Coupon';
-import CouponRepository from './CouponRepository';
-import { FreightCalculator } from './FreightCalculator';
-import ItemRepository from './ItemRepository';
-import { Order } from './Order';
-import OrderRepository from './OrderRepository';
+import CouponRepository from '../domain/repository/CouponRepository';
+import { FreightCalculator } from '../domain/service/FreightCalculator';
+import ItemRepository from '../domain/repository/ItemRepository';
+import { Order } from '../domain/entity/Order';
+import OrderRepository from '../domain/repository/OrderRepository';
 import { PlaceOrderInput } from './PlaceOrderInput';
 import { PlaceOrderOutput } from './PlaceOrderOutput';
-import { ZipCodeCalculatorAPI } from './ZipCodeCalculatorAPI';
+import { ZipCodeCalculatorAPI } from '../domain/gateway/ZipCodeCalculatorAPI';
 
 export class PlaceOrder {
   constructor(

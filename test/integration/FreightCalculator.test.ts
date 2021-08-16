@@ -1,5 +1,5 @@
-import { FreightCalculator } from './FreightCalculator';
-import { Item } from './Item';
+import { FreightCalculator } from '../../src/domain/service/FreightCalculator';
+import { Item } from '../../src/domain/entity/Item';
 
 describe('Calculo de fretes', () => {
   it('Deve calcular o frete do amplificador', () => {

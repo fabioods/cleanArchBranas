@@ -1,4 +1,4 @@
-import { ZipcodeCalculatorAPIMemory } from './ZipcodeCalculatorAPIMemory';
+import { ZipcodeCalculatorAPIMemory } from '../../src/infra/gateway/memory/ZipcodeCalculatorAPIMemory';
 
 describe('ZipCode calculator', () => {
   it('deve calcular a distancia entre 2 ceps', () => {
