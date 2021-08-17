@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "clear && jest  --passWithNoTests --runInBand --verbose",
+    "test": "clear && jest  --passWithNoTests --runInBand --verbose --forceExit",
     "prepare": "husky install",
     "lint": "eslint src/** --fix"
   },
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "date-fns": "^2.23.0",
+    "pg-promise": "^10.11.0",
     "uuid": "^8.3.2"
   }
 }
