@@ -1,4 +1,6 @@
+import { PgPromiseDatabase } from '../../../infra/database/PgPromiseDatabase';
 import { FakeFreightCalculator } from '../../../infra/gateways/memory/FakeFreightCalculator';
+import { ItemRepositoryPgDatabase } from '../../../infra/repository/database/ItemRepositoryPgDatabase';
 import { CouponRepositoryMemory } from '../../../infra/repository/memory/CouponRepositoryMemory';
 import { ItemRepositoryMemory } from '../../../infra/repository/memory/ItemRepositoryMemory';
 import { OrderRepositoryMemory } from '../../../infra/repository/memory/OrderRepositoryMemory';
@@ -13,6 +15,7 @@ import { PlaceOrderInput } from './PlaceOrderDTO';
 
 interface MakeSUT {
   placeOrder: PlaceOrder;
+  placeOrderDb: PlaceOrder;
   createUser: CreateUser;
   createItem: CreateItem;
   createCoupon: CreateCoupon;
@@ -36,6 +39,10 @@ const makeSUT = (): MakeSUT => {
   const itemRepository = new ItemRepositoryMemory();
   const createItem = new CreateItem(itemRepository);
 
+  const itemRepositoryPgDatabase = new ItemRepositoryPgDatabase(
+    new PgPromiseDatabase()
+  );
+
   const couponRepository = new CouponRepositoryMemory();
   const createCoupon = new CreateCoupon(couponRepository);
 
@@ -48,7 +55,16 @@ const makeSUT = (): MakeSUT => {
     couponRepository,
     freightCalculator
   );
-  return { placeOrder, createUser, createItem, createCoupon };
+
+  const placeOrderDb = new PlaceOrder(
+    itemRepositoryPgDatabase,
+    orderRepository,
+    userRepository,
+    couponRepository,
+    freightCalculator
+  );
+
+  return { placeOrder, createUser, createItem, createCoupon, placeOrderDb };
 };
 
 describe('Place a new Order', () => {
@@ -134,6 +150,27 @@ describe('Place a new Order', () => {
       items: [
         {
           id: '1',
+          quantity: 2,
+        },
+      ],
+      freight: {
+        zipCodeDestination: 'any_destination',
+        zipCodeOrigin: 'any_origin',
+      },
+    });
+    expect(total).toBe(2060);
+  });
+
+  it('should create a new Order with some items in Database', async () => {
+    const { placeOrderDb, createUser } = makeSUT();
+
+    const user = await createUser.execute({ cpf: 'any_cpf', name: 'any_name' });
+
+    const { total } = await placeOrderDb.execute({
+      user_id: user.id,
+      items: [
+        {
+          id: '37341e45-afb0-4421-b0be-765cb4c85c47',
           quantity: 2,
         },
       ],
