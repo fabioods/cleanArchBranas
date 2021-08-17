@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest  --passWithNoTests --runInBand --verbose",
+    "test": "jest  --passWithNoTests --runInBand --verbose --forceExit",
     "prepare": "husky install",
     "lint": "eslint src/** --fix"
   },
@@ -38,6 +38,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "pg-promise": "^10.11.0",
     "uuid": "^8.3.2"
   }
 }
