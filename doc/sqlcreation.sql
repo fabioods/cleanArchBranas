@@ -1,3 +1,7 @@
+
+create database cleanArch;
+
+create schema cleanarch;
 CREATE EXTENSION "pgcrypto";
 
 create table cleanarch.item (

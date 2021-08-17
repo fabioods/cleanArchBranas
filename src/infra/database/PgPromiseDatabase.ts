@@ -1,5 +1,4 @@
 import pgp from 'pg-promise';
-import pg from 'pg-promise/typescript/pg-subset';
 import Database from './Database';
 
 export default class PgPromiseDatabase implements Database {
