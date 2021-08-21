@@ -31,6 +31,8 @@ RUN git config --global alias.cb "!git checkout -b"
 RUN git config --global alias.ck "!git checkout"
 RUN git config --global alias.com "!git commit -m"
 
+RUN mkdir ~/.ssh
+
 WORKDIR /usr/src/app
 
 CMD ["tail", "-f", "/dev/null"]
