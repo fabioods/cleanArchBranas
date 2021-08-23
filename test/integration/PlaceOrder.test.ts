@@ -1,11 +1,11 @@
-import { PlaceOrder } from '../../src/application/PlaceOrder';
-import { PlaceOrderInput } from '../../src/application/PlaceOrderInput';
+import { PlaceOrder } from '../../src/application/PlaceOrder/PlaceOrder';
 import CouponRepositoryMemory from '../../src/infra/repository/memory/CouponRepositoryMemory';
 import ItemRepositoryMemory from '../../src/infra/repository/memory/ItemRepositoryMemory';
 import OrderRepositoryMemory from '../../src/infra/repository/memory/OrderRepositoryMemory';
 import { ZipcodeCalculatorAPIMemory } from '../../src/infra/gateway/memory/ZipcodeCalculatorAPIMemory';
 import { ItemRepositoryPGDatabase } from '../../src/infra/repository/database/ItemRepositoryPgDatabase';
 import PgPromiseDatabase from '../../src/infra/database/PgPromiseDatabase';
+import { PlaceOrderInput } from '../../src/application/PlaceOrder/PlaceOrderInput';
 
 describe('Realizar pedido', () => {
   it('Deve fazer um pedido', async () => {
@@ -51,7 +51,7 @@ describe('Realizar pedido', () => {
     };
 
     const itemRepository = new ItemRepositoryPGDatabase(
-      new PgPromiseDatabase()
+      PgPromiseDatabase.getInstance()
     );
     const couponRepository = new CouponRepositoryMemory();
     const orderRepository = new OrderRepositoryMemory();
