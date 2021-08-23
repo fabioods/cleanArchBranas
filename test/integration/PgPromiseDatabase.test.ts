@@ -4,7 +4,7 @@ let db: any;
 
 describe('Pg Promise connect', () => {
   beforeAll(() => {
-    db = new PgPromiseDatabase();
+    db = PgPromiseDatabase.getInstance();
   });
 
   it('Deve conectar no banco de dados e listar os 3 itens existentes', async () => {
