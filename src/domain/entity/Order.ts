@@ -1,6 +1,7 @@
 import { Coupon } from './Coupon';
 import { CPF } from './CPF';
 import { OrderItem } from './OrderItem';
+import { OrderCode } from './OrderCode';
 
 export class Order {
   cpf: CPF;
@@ -11,10 +12,13 @@ export class Order {
 
   freight: number;
 
-  constructor(cpf: string) {
+  code: OrderCode;
+
+  constructor(cpf: string, issueDate = new Date(), sequence = 1) {
     this.cpf = new CPF(cpf);
     this.items = [];
     this.freight = 0;
+    this.code = new OrderCode(issueDate, sequence);
   }
 
   addItem(id: string, price: number, quantity: number): void {
