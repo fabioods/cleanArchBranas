@@ -24,4 +24,8 @@ export default class PgPromiseDatabase implements Database {
   async one(query: string, parameters: any): Promise<any> {
     return this.pgp.oneOrNone(query, parameters);
   }
+
+  async none(query: string, parameters: any): Promise<void> {
+    return this.pgp.oneOrNone(query, parameters);
+  }
 }
