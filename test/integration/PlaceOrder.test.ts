@@ -6,6 +6,8 @@ import { ZipcodeCalculatorAPIMemory } from '../../src/infra/gateway/memory/Zipco
 import { ItemRepositoryPGDatabase } from '../../src/infra/repository/database/ItemRepositoryPgDatabase';
 import PgPromiseDatabase from '../../src/infra/database/PgPromiseDatabase';
 import { PlaceOrderInput } from '../../src/application/PlaceOrder/PlaceOrderInput';
+import { CouponRepositoryDatabase } from '../../src/infra/repository/database/CupomRepositoryDatabase';
+import { OrderRepositoryDatabase } from '../../src/infra/repository/database/OrderRepositoryDatabase';
 
 describe('Realizar pedido', () => {
   it('Deve fazer um pedido', async () => {
@@ -43,9 +45,9 @@ describe('Realizar pedido', () => {
     const input = {
       cpf: valid_cpf,
       items: [
-        { id: '37341e45-afb0-4421-b0be-765cb4c85c47', quantity: 2 },
-        { id: '530c130b-41c3-427f-abef-9c631eb05ce9', quantity: 1 },
-        { id: 'eaa6dc14-6563-489f-b8ae-fecbbedaa48a', quantity: 3 },
+        { id: 1, quantity: 2 },
+        { id: 2, quantity: 1 },
+        { id: 3, quantity: 3 },
       ],
       coupon: 'VALE20',
       zipcode: '11.111-11',
@@ -55,8 +57,12 @@ describe('Realizar pedido', () => {
     const itemRepository = new ItemRepositoryPGDatabase(
       PgPromiseDatabase.getInstance()
     );
-    const couponRepository = new CouponRepositoryMemory();
-    const orderRepository = new OrderRepositoryMemory();
+    const couponRepository = new CouponRepositoryDatabase(
+      PgPromiseDatabase.getInstance()
+    );
+    const orderRepository = new OrderRepositoryDatabase(
+      PgPromiseDatabase.getInstance()
+    );
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
     const placeOrder = new PlaceOrder(
       itemRepository,
