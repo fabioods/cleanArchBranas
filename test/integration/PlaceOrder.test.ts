@@ -20,6 +20,7 @@ describe('Realizar pedido', () => {
       ],
       coupon: 'VALE20',
       zipcode: '11.111-11',
+      issueDate: new Date(),
     };
 
     const itemRepository = new ItemRepositoryMemory();
@@ -48,6 +49,7 @@ describe('Realizar pedido', () => {
       ],
       coupon: 'VALE20',
       zipcode: '11.111-11',
+      issueDate: new Date(),
     };
 
     const itemRepository = new ItemRepositoryPGDatabase(
@@ -78,6 +80,7 @@ describe('Realizar pedido', () => {
       ],
       coupon: 'VALE20_EXPIRED',
       zipcode: '11.111-11',
+      issueDate: new Date(),
     });
 
     const itemRepository = new ItemRepositoryMemory();
@@ -106,6 +109,7 @@ describe('Realizar pedido', () => {
       ],
       coupon: 'VALE20_EXPIRED',
       zipcode: '11.111-11',
+      issueDate: new Date(),
     };
 
     const itemRepository = new ItemRepositoryMemory();
@@ -120,5 +124,32 @@ describe('Realizar pedido', () => {
     );
     const output = await placeOrder.execute(input);
     expect(output.freight).toBe(310);
+  });
+
+  it('Deve fazer um pedido calculando código', async () => {
+    const valid_cpf = '778.278.412-36';
+
+    const itemRepository = new ItemRepositoryMemory();
+    const couponRepository = new CouponRepositoryMemory();
+    const orderRepository = new OrderRepositoryMemory();
+    const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
+    const placeOrder = new PlaceOrder(
+      itemRepository,
+      couponRepository,
+      orderRepository,
+      zipcodeCalculator
+    );
+    const output = await placeOrder.execute({
+      cpf: valid_cpf,
+      items: [
+        { id: '1', quantity: 2 },
+        { id: '2', quantity: 1 },
+        { id: '3', quantity: 3 },
+      ],
+      coupon: 'VALE20_EXPIRED',
+      zipcode: '11.111-11',
+      issueDate: new Date('2020-10-10'),
+    });
+    expect(output.code).toBe('202000000001');
   });
 });
