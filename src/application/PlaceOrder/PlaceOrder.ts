@@ -27,16 +27,16 @@ export class PlaceOrder {
       // eslint-disable-next-line no-await-in-loop
       const item = await this.itemRepository.getById(orderItem.id);
       if (!item) throw new Error('Item not found');
-      order.addItem(orderItem.id, item.price, orderItem.quantity);
+      order.addItem(orderItem.id, Number(item.price), orderItem.quantity);
       order.freight +=
         FreightCalculator.calculate(item, distance) * orderItem.quantity;
     }
     if (input.coupon) {
-      const coupon = this.couponRepository.getByCode(input.coupon);
+      const coupon = await this.couponRepository.getByCode(input.coupon);
       if (coupon) order.addCoupon(coupon);
     }
     const total = order.getTotal();
-    this.orderRepository.save(order);
+    await this.orderRepository.save(order);
     return new PlaceOrderOutput({
       code: order.code.value,
       freight: order.freight,
