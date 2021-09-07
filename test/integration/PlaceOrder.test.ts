@@ -1,13 +1,8 @@
 import { PlaceOrder } from '../../src/application/PlaceOrder/PlaceOrder';
-import CouponRepositoryMemory from '../../src/infra/repository/memory/CouponRepositoryMemory';
-import ItemRepositoryMemory from '../../src/infra/repository/memory/ItemRepositoryMemory';
-import OrderRepositoryMemory from '../../src/infra/repository/memory/OrderRepositoryMemory';
 import { ZipcodeCalculatorAPIMemory } from '../../src/infra/gateway/memory/ZipcodeCalculatorAPIMemory';
-import { ItemRepositoryPGDatabase } from '../../src/infra/repository/database/ItemRepositoryPgDatabase';
-import PgPromiseDatabase from '../../src/infra/database/PgPromiseDatabase';
 import { PlaceOrderInput } from '../../src/application/PlaceOrder/PlaceOrderInput';
-import { CouponRepositoryDatabase } from '../../src/infra/repository/database/CupomRepositoryDatabase';
-import { OrderRepositoryDatabase } from '../../src/infra/repository/database/OrderRepositoryDatabase';
+import { MemoryRepositoryFactory } from '../../src/infra/factory/MemoryRepositoryFactory';
+import { DatabaseRepositoryFactory } from '../../src/infra/factory/DatabaseRepositoryFactory';
 
 describe('Realizar pedido', () => {
   it('Deve fazer um pedido', async () => {
@@ -24,17 +19,9 @@ describe('Realizar pedido', () => {
       zipcode: '11.111-11',
       issueDate: new Date(),
     };
-
-    const itemRepository = new ItemRepositoryMemory();
-    const couponRepository = new CouponRepositoryMemory();
-    const orderRepository = new OrderRepositoryMemory();
+    const repositoryFactory = new MemoryRepositoryFactory();
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
-    const placeOrder = new PlaceOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository,
-      zipcodeCalculator
-    );
+    const placeOrder = new PlaceOrder(repositoryFactory, zipcodeCalculator);
     const output = await placeOrder.execute(input);
     expect(output.total).toBe(5982);
   });
@@ -53,23 +40,9 @@ describe('Realizar pedido', () => {
       zipcode: '11.111-11',
       issueDate: new Date(),
     };
-
-    const itemRepository = new ItemRepositoryPGDatabase(
-      PgPromiseDatabase.getInstance()
-    );
-    const couponRepository = new CouponRepositoryDatabase(
-      PgPromiseDatabase.getInstance()
-    );
-    const orderRepository = new OrderRepositoryDatabase(
-      PgPromiseDatabase.getInstance()
-    );
+    const repositoryFactory = new DatabaseRepositoryFactory();
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
-    const placeOrder = new PlaceOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository,
-      zipcodeCalculator
-    );
+    const placeOrder = new PlaceOrder(repositoryFactory, zipcodeCalculator);
     const output = await placeOrder.execute(input);
     expect(output.total).toBe(5982);
   });
@@ -88,17 +61,9 @@ describe('Realizar pedido', () => {
       zipcode: '11.111-11',
       issueDate: new Date(),
     });
-
-    const itemRepository = new ItemRepositoryMemory();
-    const couponRepository = new CouponRepositoryMemory();
-    const orderRepository = new OrderRepositoryMemory();
+    const repositoryFactory = new MemoryRepositoryFactory();
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
-    const placeOrder = new PlaceOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository,
-      zipcodeCalculator
-    );
+    const placeOrder = new PlaceOrder(repositoryFactory, zipcodeCalculator);
     const output = await placeOrder.execute(input);
     expect(output.total).toBe(7400);
   });
@@ -117,34 +82,18 @@ describe('Realizar pedido', () => {
       zipcode: '11.111-11',
       issueDate: new Date(),
     };
-
-    const itemRepository = new ItemRepositoryMemory();
-    const couponRepository = new CouponRepositoryMemory();
-    const orderRepository = new OrderRepositoryMemory();
+    const repositoryFactory = new MemoryRepositoryFactory();
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
-    const placeOrder = new PlaceOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository,
-      zipcodeCalculator
-    );
+    const placeOrder = new PlaceOrder(repositoryFactory, zipcodeCalculator);
     const output = await placeOrder.execute(input);
     expect(output.freight).toBe(310);
   });
 
   it('Deve fazer um pedido calculando o código', async () => {
     const valid_cpf = '778.278.412-36';
-
-    const itemRepository = new ItemRepositoryMemory();
-    const couponRepository = new CouponRepositoryMemory();
-    const orderRepository = new OrderRepositoryMemory();
+    const repositoryFactory = new MemoryRepositoryFactory();
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
-    const placeOrder = new PlaceOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository,
-      zipcodeCalculator
-    );
+    const placeOrder = new PlaceOrder(repositoryFactory, zipcodeCalculator);
     const output = await placeOrder.execute({
       cpf: valid_cpf,
       items: [

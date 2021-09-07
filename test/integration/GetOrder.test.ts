@@ -1,13 +1,8 @@
 import { PlaceOrder } from '../../src/application/PlaceOrder/PlaceOrder';
-import CouponRepositoryMemory from '../../src/infra/repository/memory/CouponRepositoryMemory';
-import ItemRepositoryMemory from '../../src/infra/repository/memory/ItemRepositoryMemory';
-import OrderRepositoryMemory from '../../src/infra/repository/memory/OrderRepositoryMemory';
 import { ZipcodeCalculatorAPIMemory } from '../../src/infra/gateway/memory/ZipcodeCalculatorAPIMemory';
 import { GetOrder } from '../../src/application/GetOrder/GetOrder';
-import { ItemRepositoryPGDatabase } from '../../src/infra/repository/database/ItemRepositoryPgDatabase';
-import { CouponRepositoryDatabase } from '../../src/infra/repository/database/CupomRepositoryDatabase';
-import { OrderRepositoryDatabase } from '../../src/infra/repository/database/OrderRepositoryDatabase';
-import PgPromiseDatabase from '../../src/infra/database/PgPromiseDatabase';
+import { DatabaseRepositoryFactory } from '../../src/infra/factory/DatabaseRepositoryFactory';
+import { MemoryRepositoryFactory } from '../../src/infra/factory/MemoryRepositoryFactory';
 
 describe('Get pedido', () => {
   it('Deve consultar um pedido', async () => {
@@ -24,23 +19,11 @@ describe('Get pedido', () => {
       zipcode: '11.111-11',
       issueDate: new Date(),
     };
-
-    const itemRepository = new ItemRepositoryMemory();
-    const couponRepository = new CouponRepositoryMemory();
-    const orderRepository = new OrderRepositoryMemory();
+    const repositoryFactory = new MemoryRepositoryFactory();
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
-    const placeOrder = new PlaceOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository,
-      zipcodeCalculator
-    );
+    const placeOrder = new PlaceOrder(repositoryFactory, zipcodeCalculator);
     const output = await placeOrder.execute(input);
-    const getOrder = new GetOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository
-    );
+    const getOrder = new GetOrder(repositoryFactory);
     const getOrderOut = await getOrder.execute(output.code);
     expect(getOrderOut.total).toBe(5982);
   });
@@ -59,31 +42,16 @@ describe('Get pedido', () => {
       zipcode: '11.111-11',
       issueDate: new Date(),
     };
-
-    const itemRepository = new ItemRepositoryPGDatabase(
-      PgPromiseDatabase.getInstance()
-    );
-    const couponRepository = new CouponRepositoryDatabase(
-      PgPromiseDatabase.getInstance()
-    );
-    const orderRepository = new OrderRepositoryDatabase(
-      PgPromiseDatabase.getInstance()
-    );
-    await orderRepository.clean();
+    const repositoryFactory = new DatabaseRepositoryFactory();
+    await repositoryFactory.createOrderRepository().clean();
     const zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
-    const placeOrder = new PlaceOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository,
-      zipcodeCalculator
-    );
+
+    const placeOrder = new PlaceOrder(repositoryFactory, zipcodeCalculator);
     const output = await placeOrder.execute(input);
-    const getOrder = new GetOrder(
-      itemRepository,
-      couponRepository,
-      orderRepository
-    );
+
+    const getOrder = new GetOrder(repositoryFactory);
     const getOrderOut = await getOrder.execute(output.code);
+
     expect(getOrderOut.total).toBe(5982);
   });
 });
