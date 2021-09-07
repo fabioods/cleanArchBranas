@@ -2,10 +2,19 @@ import pgp from 'pg-promise';
 import Database from './Database';
 
 export default class PgPromiseDatabase implements Database {
-  pgp: any;
+  private pgp: any;
 
-  constructor() {
+  static instance: PgPromiseDatabase;
+
+  private constructor() {
     this.pgp = pgp()('postgres://postgres:postgres@localhost:5555/cleanArch');
+  }
+
+  static getInstance(): PgPromiseDatabase {
+    if (!this.instance) {
+      this.instance = new this();
+    }
+    return this.instance;
   }
 
   async many(query: string, parameters: any): Promise<any> {

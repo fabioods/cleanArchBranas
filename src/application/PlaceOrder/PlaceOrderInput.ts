@@ -14,13 +14,13 @@ export class PlaceOrderInput {
     zipcode,
     items,
     coupon,
-    issueDate,
+    issueDate = new Date(),
   }: {
     cpf: string;
     zipcode: string;
     items: any;
     coupon: string;
-    issueDate: Date;
+    issueDate?: Date;
   }) {
     this.cpf = cpf;
     this.zipcode = zipcode;

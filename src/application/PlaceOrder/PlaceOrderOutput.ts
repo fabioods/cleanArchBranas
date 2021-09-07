@@ -6,16 +6,16 @@ export class PlaceOrderOutput {
   code: string;
 
   constructor({
-    code,
     freight,
     total,
+    code,
   }: {
-    code: string;
     freight: number;
     total: number;
+    code: string;
   }) {
-    this.code = code;
     this.freight = freight;
     this.total = total;
+    this.code = code;
   }
 }
