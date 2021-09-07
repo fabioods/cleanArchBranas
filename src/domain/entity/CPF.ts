@@ -1,5 +1,5 @@
 export class CPF {
-  private cpf: string;
+  value: string;
 
   private readonly FACTOR_DIGIT_1 = 10;
 
@@ -11,7 +11,7 @@ export class CPF {
 
   constructor(cpf: string) {
     if (!this.validate(cpf)) throw new Error('Invalid CPF');
-    this.cpf = cpf;
+    this.value = cpf;
   }
 
   private extractDigits(cpf: string): string {
