@@ -7,7 +7,7 @@ export class ItemRepositoryPGDatabase implements ItemRepository {
 
   async getById(id: string): Promise<Item | undefined> {
     const itemData = await this.database.one(
-      'select * from cleanarch.item where id = $1',
+      'select * from ccca.item where id = $1',
       [id]
     );
     const item = new Item(
