@@ -14,15 +14,21 @@ export class Order {
 
   code: OrderCode;
 
+  issueDate: Date;
+
+  sequence: number;
+
   constructor(cpf: string, issueDate = new Date(), sequence = 1) {
     this.cpf = new CPF(cpf);
     this.items = [];
     this.freight = 0;
+    this.issueDate = issueDate;
+    this.sequence = sequence;
     this.code = new OrderCode(issueDate, sequence);
   }
 
   addItem(id: string, price: number, quantity: number): void {
-    this.items.push(new OrderItem(id, price, quantity));
+    this.items.push(new OrderItem(id, quantity, price));
   }
 
   getTotal(): number {
